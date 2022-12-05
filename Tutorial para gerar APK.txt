@@ -1,0 +1,6 @@
+Abra o CMD como ADM e entre na pasta do seu apk;
+cole o seguite comando:
+keytool -genkeypair -v -storetype PKCS12 -keystore my-upload-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
+Preencha o formulário;
+copie a chave que foi gerada na raíz do seu projeto e cole no diretório adroid/app;
+Siga os passos desse site: https://reactnative.dev/docs/signed-apk-android (porém use o comando gradlew assembleRelease para APK e o gradlew bundleRelease se quiser o AAB) ;
