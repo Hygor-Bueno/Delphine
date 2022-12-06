@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
         marginStart: 14,
         marginEnd: 14,
         borderRadius: 4,
-        paddingTop: 22, 
-        paddingBottom: 22
+        paddingTop: 14, 
+        paddingBottom: 14
     },
     itemTitle:{
         fontSize:20,

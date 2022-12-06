@@ -18,38 +18,40 @@ import { faHomeUser } from '@fortawesome/free-solid-svg-icons/faHomeUser';
 import { faHome } from '@fortawesome/free-solid-svg-icons/faHome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
+import { faGenderless } from '@fortawesome/free-solid-svg-icons/faGenderless';
 
-library.add(fab, faSquareCheck, faMugSaucer, faHomeUser,faHome,faSearch,faPlus);
+library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus,faPlusCircle,faGenderless);
 
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './Src/Components/Routes';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function App() {
+  useEffect(() => {
+    async function createDataBase() {
+      try {
+        let data = {
+          nome: '',
+          releasesList: [],
+        };
+        await AsyncStorage.setItem('user', JSON.stringify(data));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    async function queryDataBase(key) {
+      const value = await AsyncStorage.getItem(key);
+      if (value === null) {
+        await createDataBase();
+      }
+    };
+    queryDataBase('user');
+    //  (()=>{AsyncStorage.removeItem('user');})(); 
+  }, []);
   return (
     <NavigationContainer>
       <Routes />
     </NavigationContainer>
-  )
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fbfafb',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    margin: 14
-  },
-  list: {
-    marginStart: 14,
-    marginEnd: 14,
-  },
-  username: {
-    fontSize: 18,
-    color: '#000',
-    fontWeight: 'bold'
-  },
-
-});

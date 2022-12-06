@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, StatusBar, TouchableOpacity } from 'react-native';
 
-const statusBarHeight = StatusBar.currentHeight ? StatusBar.currentHeight + 22 : 1;
+const statusBarHeight = StatusBar.currentHeight ? StatusBar.currentHeight : 1;
 
 export default function header({ name }) {
     return (
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         paddingTop: statusBarHeight,
         paddingStart: 16,
         paddingEnd: 16,
-        paddingBottom: 44,
+        paddingBottom: 30,
         flexDirection: 'row'
     },
     content: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../Pages/Home"
 import InitPage from "../Pages/PageTeste/InitPage";
@@ -8,7 +8,8 @@ import BtnReleases from "./Buttons/BtnReleases";
 
 const Tab = createBottomTabNavigator();
 export default function Routes() {
-    return (
+    const [name,setName] = useState("Sovingard")
+        return (
         <Tab.Navigator
         initialRouteName="Inicial"
             screenOptions={stylesNav}
@@ -17,6 +18,9 @@ export default function Routes() {
                 name="Home"
                 component={Home}
                 options={{
+                    title:'',
+                    headerShown:false,
+                    headerTransparent:true,
                     tabBarIcon: ({ size, color }) => (
                         <FontAwesomeIcon icon="home" name="home" size={size} color={color} />
                     )
@@ -27,7 +31,9 @@ export default function Routes() {
                 name="Inicial"
                 component={InitPage}
                 options={{
-                    tabBarLabel:'',
+                    title:'',
+                    headerShown:false,
+                    headerTransparent:true,
                     tabBarIcon: ({ focused,size, color }) => (
                         <BtnReleases size={size} focused={focused} color={color} />
                     )
@@ -38,6 +44,9 @@ export default function Routes() {
                 name="Final"
                 component={FinalPage}
                 options={{
+                    title:'',
+                    headerShown:false,
+                    headerTransparent:true,
                     tabBarIcon: ({ size, color }) => (
                         <FontAwesomeIcon icon="search" name="search" size={size} color={color} />
                     )
