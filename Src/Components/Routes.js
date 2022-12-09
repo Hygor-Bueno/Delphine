@@ -18,11 +18,10 @@ export default function Routes() {
             try {
                 const value = await AsyncStorage.getItem(key);
                 let newValue = JSON.parse(value);
-                setMovements(newValue);
-                console.log(newValue);
+                console.error(value, " <<<<<<<<<<<<<<<>>>>>>>>")
                 if (value !== null && newValue.releasesList.length > 0) {
-                    console.warn(value.releasesList.length);
                     newValue.releasesList = orderObjectArrayByString(thisMonth(newValue.releasesList || []));
+                    setMovements(newValue);
                     calcExpenses(newValue.releasesList || []);
                 }
             } catch (error) {

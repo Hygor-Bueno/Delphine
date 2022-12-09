@@ -63,10 +63,10 @@ export default function App() {
         await createNextId();
       }
     };
-    // queryDataBase('user');
-    // queryNextId('lastID');
-     (()=>{AsyncStorage.removeItem('user');})();
-     (()=>{AsyncStorage.removeItem('lastID');})();
+    queryDataBase('user');
+    queryNextId('lastID');
+    //  (()=>{AsyncStorage.removeItem('user');})();
+    //  (()=>{AsyncStorage.removeItem('lastID');})();
   }, []);
   return (
     <NavigationContainer>
