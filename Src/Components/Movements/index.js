@@ -7,16 +7,17 @@ export default function Movements({ data }) {
         <TouchableOpacity style={styles.container} onPress={()=>setShowValue(!showValue)}>
             <Text style={styles.date}>{data.date}</Text>
             <View style={styles.content}>
-                <Text style={styles.label}>{data.label}</Text>
+                <Text style={styles.label}>{data.description}</Text>
                 {
-                    showValue ? (<Text style={data.type === 1 ? styles.value : styles.expenses}>R$ {data.type === 1 ? data.value : `-${data.value}`}</Text>) :
-                        (
-                            <View style={styles.skeleton}></View>
-                        )
+                    showValue ? (<Text style={data.type === 1 ? styles.value : styles.expenses}>{data.type === 1 ? maskMoney(data.value) : `-${maskMoney(data.value)}`}</Text>) :(<View style={styles.skeleton}></View>)
                 }
             </View>
         </TouchableOpacity>
-    )
+    );
+    function maskMoney(value) {
+        let newValue = parseFloat(value ? value : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        return newValue;
+    }
 }
 
 const styles = StyleSheet.create({
@@ -57,5 +58,4 @@ const styles = StyleSheet.create({
         backgroundColor: '#DADADA',
         borderRadius:8
     }
-
 })

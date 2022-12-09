@@ -20,8 +20,11 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
 import { faGenderless } from '@fortawesome/free-solid-svg-icons/faGenderless';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
+import { faCalendarDays } from '@fortawesome/free-solid-svg-icons/faCalendarDays';
+import { teste } from '@fortawesome/free-solid-svg-icons';
 
-library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus,faPlusCircle,faGenderless);
+library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus,faPlusCircle,faGenderless,faCalendar,faCalendarDays);
 
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './Src/Components/Routes';
@@ -40,14 +43,30 @@ export default function App() {
         console.log(e);
       }
     }
+    async function createNextId() {
+      try {
+        await AsyncStorage.setItem('lastID', "0");
+      } catch (e) {
+        console.log(e);
+      }
+    }
     async function queryDataBase(key) {
       const value = await AsyncStorage.getItem(key);
       if (value === null) {
         await createDataBase();
       }
     };
-    queryDataBase('user');
-    //  (()=>{AsyncStorage.removeItem('user');})(); 
+
+    async function queryNextId(key) {
+      const value = await AsyncStorage.getItem(key);
+      if (value === null) {
+        await createNextId();
+      }
+    };
+    // queryDataBase('user');
+    // queryNextId('lastID');
+     (()=>{AsyncStorage.removeItem('user');})();
+     (()=>{AsyncStorage.removeItem('lastID');})();
   }, []);
   return (
     <NavigationContainer>

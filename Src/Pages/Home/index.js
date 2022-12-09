@@ -1,57 +1,50 @@
-import React, {useState, useEffect} from 'react';
-import { StyleSheet, View,Text , FlatList} from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Text, FlatList } from 'react-native';
 import Header from '../../Components/Header';
 import Balance from '../../Components/Balance';
 import Movements from '../../Components/Movements';
-import AsyncStorage from '@react-native-community/async-storage';
 // import Actions from '../../Components/Actions';
-
-export default function Home({navigation, route}) {
-  const [movements,setMovements]=useState();
-  useEffect(() => {
-    const getStorange = async (key) =>{
-      try {
-        const value = await AsyncStorage.getItem(key);
-        if (value !== null) {
-          setMovements(value);
-        }
-      } catch (error) {
-        console.log(error );
-      }
-    };
-    getStorange('user');
-  },[]);
-
-  useEffect(() => {console.log(movements)},[movements]);
+export default function Home(props) {
   return (
     <View style={styles.container}>
-      <Header name={'Hygor A. Bueno '}/>
-      <Balance saldo="9250,90" gastos="-2.2570,00"/>
+      <Text>{props.text}</Text>
+      <Header name={props.propValue} />
+      <Balance balances={props.balances} spending={props.spending} />
       {/* <Actions /> */}
       <Text style={styles.title}> Últimas movimentações</Text>
       <FlatList
         style={styles.list}
-        data={[]}
-        keyExtractor={(item)=>String(item.id)}
+        data={thisMonth(props.movements.releasesList || [])}
+        keyExtractor={(item) => String(item.id)}
         showsVerticalScrollIndicator={false}
-        renderItem={({item})=><Movements data={item}/>}
+        renderItem={({ item }) => <Movements data={item} />}
       />
     </View>
   );
+  function thisMonth(array) {
+    let data = new Date();
+    let month = String(data.getMonth() + 1).padStart(2, '0');
+    let year = data.getFullYear();
+    let validate = `${month}/${year}`;
+    let newList = [];
+    array.forEach(item => {
+      if (item.date.includes(validate)) { newList.push(item); }
+    });
+    return newList;
+  }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fbfafb',
   },
-  title:{
-    fontSize:18,
-    fontWeight:'bold',
-    margin:14
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 14
   },
-  list:{
-    marginStart:14,
-    marginEnd:14,
+  list: {
+    marginStart: 14,
+    marginEnd: 14,
   }
 });
