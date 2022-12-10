@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../Pages/Home"
-import InitPage from "../Pages/PageTeste/InitPage";
-import FinalPage from "../Pages/PageTeste/FinalPage";
+import Historic from "../Pages/Releases/Historic";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import BtnReleases from "./Buttons/BtnReleases";
 import AsyncStorage from "@react-native-community/async-storage";
+import Releases from "../Pages/Historic/Releases";
 
 const Tab = createBottomTabNavigator();
 export default function Routes() {
     const [spending, setSpending] = useState(0);
     const [balances, setBalances] = useState(0);
     const [movements, setMovements] = useState({});
-    useEffect(() => { console.log(movements) });
     useEffect(() => {
         const getStorange = async (key) => {
             try {
                 const value = await AsyncStorage.getItem(key);
                 let newValue = JSON.parse(value);
-                console.error(value, " <<<<<<<<<<<<<<<>>>>>>>>")
                 if (value !== null && newValue.releasesList.length > 0) {
                     newValue.releasesList = orderObjectArrayByString(thisMonth(newValue.releasesList || []));
                     setMovements(newValue);
@@ -65,11 +63,9 @@ export default function Routes() {
             return newList;
         }
     }, []);
-
-    // const [text, setText] = useState("DelRei")
     return (
         <Tab.Navigator
-            initialRouteName="Inicial"
+            initialRouteName="Histórico"
             screenOptions={stylesNav}
         >
             <Tab.Screen
@@ -87,8 +83,8 @@ export default function Routes() {
             />
 
             <Tab.Screen
-                name="Inicial"
-                children={() => <InitPage spending={spending} balances={balances} setBalances={setBalances} setSpending={setSpending} setMovements={setMovements} />}
+                name="Lançamentos"
+                children={() => <Releases spending={spending} balances={balances} setBalances={setBalances} setSpending={setSpending} movements={movements} setMovements={setMovements} />}
                 options={{
                     title: '',
                     headerShown: false,
@@ -100,8 +96,8 @@ export default function Routes() {
             />
 
             <Tab.Screen
-                name="Final"
-                component={FinalPage}
+                name="Histórico"
+                children={()=><Historic/>}
                 options={{
                     title: '',
                     headerShown: false,

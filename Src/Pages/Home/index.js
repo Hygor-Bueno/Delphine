@@ -8,7 +8,7 @@ export default function Home(props) {
   return (
     <View style={styles.container}>
       <Text>{props.text}</Text>
-      <Header name={props.propValue} />
+      <Header name={props.movements.name} />
       <Balance balances={props.balances} spending={props.spending} />
       {/* <Actions /> */}
       <Text style={styles.title}> Últimas movimentações</Text>
@@ -36,12 +36,13 @@ export default function Home(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fbfafb',
+    backgroundColor: '#3a3b3c',
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    margin: 14
+    margin: 14,
+    color:'#CACACA'
   },
   list: {
     marginStart: 14,

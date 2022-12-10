@@ -16,12 +16,13 @@ export default function header({ name }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#8000ff',
+        backgroundColor: '#121212',
         paddingTop: statusBarHeight,
         paddingStart: 16,
         paddingEnd: 16,
         paddingBottom: 30,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginTop: statusBarHeight*-1
     },
     content: {
         flex: 1,

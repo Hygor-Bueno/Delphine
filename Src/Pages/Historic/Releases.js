@@ -4,8 +4,9 @@ import AsyncStorage from "@react-native-community/async-storage";
 import React, { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import DatePicker from "react-native-date-picker";
+import Loading from "../../Components/Loading/Loading";
 
-export default function InitPage(props) {
+export default function Releases(props) {
     const [item, setItem] = useState({
         id: '',
         date: '',
@@ -13,28 +14,28 @@ export default function InitPage(props) {
         value: '',
         type: ''
     });
-    const [data, setData] = useState({});
-    const [lastID, setLastID] = useState("0");
+
+    const [lastID, setLastID] = useState('0');
     const [date, setDate] = useState(new Date());
     const [open, setOpen] = useState(false);
+    const [load, setLoad] = useState(false);
 
     useEffect(() => {
         const getStorange = async (key) => {
             try {
                 const value = await AsyncStorage.getItem(key);
                 if (value !== null) {
-                    key === 'user' ? setData(JSON.parse(value)) : setLastID(value);
+                    setLastID(value);
                 }
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         };
-        getStorange('user');
         getStorange('lastID');
     }, []);
-    useEffect(() => { console.log(lastID) }, [lastID]);
     return (
-        <View>
+        <View style={styles.container}>
+            {load && <Loading/>}
             <View style={styles.contentDatas}>
                 <View style={styles.contentInputs}>
                     <Text style={styles.titleText}>Descrição:</Text>
@@ -60,7 +61,7 @@ export default function InitPage(props) {
                         activeOpacity={0.5}
                         onPress={() => { setOpen(true) }}
                     >
-                        <FontAwesomeIcon color='#146ebe' size={30} icon="calendar-days" />
+                        <FontAwesomeIcon color='#CACACA' size={30} icon="calendar-days" />
                     </TouchableOpacity>
                     <DatePicker
                         mode="date"
@@ -73,7 +74,7 @@ export default function InitPage(props) {
                             await captureValue('date', convertDate(date));
                         }}
                         onCancel={() => {
-                            setOpen(false)
+                            setOpen(false);
                         }}
                     />
                 </View>
@@ -83,7 +84,8 @@ export default function InitPage(props) {
                     style={styles.buttonInput}
                     activeOpacity={0.5}
                     onPress={async () => {
-                        if (await validateItem()) {
+                        setLoad(true);
+                        if (validateItem()) {
                             await captureValue('type', 1);
                             await insertRegister();
                             clearForm();
@@ -98,7 +100,8 @@ export default function InitPage(props) {
                     style={styles.buttonExit}
                     activeOpacity={0.5}
                     onPress={async () => {
-                        if (await validateItem()) {
+                        setLoad(true);
+                        if (validateItem()) {
                             await captureValue('type', 0);
                             await insertRegister();
                             clearForm();
@@ -118,25 +121,24 @@ export default function InitPage(props) {
         value[key] = text;
         setItem({ ...value });
     }
-    async function validateItem() {
+    function validateItem() {
         let result = false;
         if (item.description !== '' && item.value !== '') { result = true; }
         return result;
     }
     async function insertRegister() {
-        let newItem = data;
+        let newItem = props.movements;
         let newID = parseInt(lastID) + 1;
         await captureValue('id', newID);
         item.date === '' && await captureValue('date', convertDate(new Date()));
         newItem.releasesList.push(item);
         newItem.releasesList = orderObjectArrayByString(newItem.releasesList);
         setLastID(newID);
-        setData({ ...data });
         isDataView(item.date) && reCalculate(item);
         await postStorange('user', JSON.stringify(newItem));
         await postStorange('lastID', newID.toString());
-        props.setMovements({ ...data });
-        console.log(data);
+        props.setMovements({ ...newItem });
+        setLoad(false);
     }
 
     function isDataView(dateValidate) {
@@ -191,6 +193,10 @@ export default function InitPage(props) {
     }
 }
 const styles = StyleSheet.create({
+    container:{
+        height: '100%',
+        backgroundColor: '#3a3b3c'
+    },
     contentDatas: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -243,7 +249,17 @@ const styles = StyleSheet.create({
         width: 200,
         height: 50,
         fontSize: 25,
-        borderRadius: 12
+        borderRadius: 12,
+        color: 'white',
+    },
+    textName: {
+        borderColor: '#ccc',
+        borderWidth: 1,
+        width: 300,
+        height: 50,
+        fontSize: 25,
+        borderRadius: 12,
+        color: 'white',
     },
     textValue: {
         borderColor: '#ccc',
@@ -251,9 +267,11 @@ const styles = StyleSheet.create({
         width: 100,
         height: 50,
         fontSize: 25,
-        borderRadius: 12
+        borderRadius: 12,
+        color: 'white',
     },
     titleText: {
         fontSize: 20,
+        color:'#CACACA',
     }
 });

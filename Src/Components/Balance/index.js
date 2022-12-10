@@ -1,14 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextComponent } from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
 
 export default function Balance(props) {
+    const total = props.balances - props.spending;
+    console.log(total);
     return (
         <View style={styles.container}>
             <View>
                 <Text style={styles.itemTitle}>Saldo</Text>
                 <View style={styles.content}>
                     <Text style={styles.currencySimbol}>R$</Text>
-                    <Text style={styles.balance}>{maskMoney((props.balances - props.spending))}</Text>
+                    <Text style={total >= 0 ? styles.balance : styles.expenses}> {total < 0 && '-' }{maskMoney(total)}</Text>
                 </View>
             </View>
             <View style={styles.subContainer}>
@@ -18,20 +20,21 @@ export default function Balance(props) {
                 </View>
                 <View style={styles.subView}>
                     <Text style={styles.subTitle}>Saída:</Text>
-                    <Text style={styles.expenses}>{maskMoney(props.spending)}</Text>
+                    <Text style={styles.subExpenses}>{maskMoney(props.spending)}</Text>
                 </View>
             </View>
         </View>
     );
     function maskMoney(value) {
-        let newValue = value ? parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : null;
+        let newValue = value ? value : 0;
+        newValue = parseFloat(newValue).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         if (newValue) { newValue = newValue.split("R$").length > 0 ? newValue.split("R$")[1] : newValue; }
-        return newValue || "N/P"
+        return newValue;
     }
 }
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#1B1E23',
         flexDirection: 'row',
         justifyContent: 'space-between',
 
@@ -77,6 +80,10 @@ const styles = StyleSheet.create({
         color: "#2ecc71"
     },
     expenses: {
+        fontSize: 22,
+        color: '#e75c3c'
+    },
+    subExpenses: {
         fontSize: 18,
         color: '#e75c3c'
     }

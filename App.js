@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StatusBar, StyleSheet, Text, View } from 'react-native';
 //Biblioteca de estilos para utilização de icones personalizados em todo o código.
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -22,9 +22,10 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons/faPlusCircle';
 import { faGenderless } from '@fortawesome/free-solid-svg-icons/faGenderless';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons/faCalendarDays';
+import { faSackDollar } from '@fortawesome/free-solid-svg-icons/faSackDollar';
 import { teste } from '@fortawesome/free-solid-svg-icons';
 
-library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus,faPlusCircle,faGenderless,faCalendar,faCalendarDays);
+library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus, faPlusCircle, faGenderless, faCalendar, faCalendarDays,faSackDollar);
 
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './Src/Components/Routes';
@@ -70,6 +71,7 @@ export default function App() {
   }, []);
   return (
     <NavigationContainer>
+      <StatusBar backgroundColor='#121212'/>
       <Routes />
     </NavigationContainer>
   );
