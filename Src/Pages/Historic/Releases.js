@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AsyncStorage from "@react-native-community/async-storage";
 import React, { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -32,7 +32,7 @@ export default function Releases(props) {
             }
         };
         getStorange('lastID');
-    }, []);
+    }, [props]);
     return (
         <View style={styles.container}>
             {load && <Loading/>}
@@ -146,7 +146,6 @@ export default function Releases(props) {
         let month = String(dates.getMonth() + 1).padStart(2, '0');
         let year = dates.getFullYear();
         let validate = `${month}/${year}`;
-        console.log(dateValidate);
         return dateValidate.includes(validate);
     }
     function reCalculate(objectItem) {

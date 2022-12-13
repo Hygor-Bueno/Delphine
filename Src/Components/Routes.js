@@ -11,14 +11,20 @@ const Tab = createBottomTabNavigator();
 export default function Routes() {
     const [spending, setSpending] = useState(0);
     const [balances, setBalances] = useState(0);
-    const [movements, setMovements] = useState({});
+    const [movements, setMovements] = useState({
+        nome: '',
+        releasesList: [],
+      });
+    const [origin, setOrigin] = useState({});
     useEffect(() => {
         const getStorange = async (key) => {
             try {
                 const value = await AsyncStorage.getItem(key);
                 let newValue = JSON.parse(value);
-                if (value !== null && newValue.releasesList.length > 0) {
-                    newValue.releasesList = orderObjectArrayByString(thisMonth(newValue.releasesList || []));
+                console.log(value)
+                if (value !== null) {
+                    setOrigin(JSON.parse(value) || {});
+                    newValue.releasesList = orderObjectArrayByString(newValue.releasesList || []);
                     setMovements(newValue);
                     calcExpenses(newValue.releasesList || []);
                 }
@@ -41,7 +47,8 @@ export default function Routes() {
         function calcExpenses(array) {
             let newSpending = 0,
                 newBalances = 0;
-            array.forEach(item => {
+            let newArray = thisMonth(array);
+            newArray.forEach(item => {
                 if (parseInt(item.type) === 1) {
                     newBalances += parseFloat(item.value);
                 } else {
@@ -65,7 +72,7 @@ export default function Routes() {
     }, []);
     return (
         <Tab.Navigator
-            initialRouteName="Histórico"
+            initialRouteName="Home"
             screenOptions={stylesNav}
         >
             <Tab.Screen
@@ -84,7 +91,7 @@ export default function Routes() {
 
             <Tab.Screen
                 name="Lançamentos"
-                children={() => <Releases spending={spending} balances={balances} setBalances={setBalances} setSpending={setSpending} movements={movements} setMovements={setMovements} />}
+                children={() => <Releases spending={spending} balances={balances} setBalances={setBalances} setSpending={setSpending} origin={origin} setOrigin={origin} movements={movements} setMovements={setMovements} />}
                 options={{
                     title: '',
                     headerShown: false,
@@ -97,7 +104,7 @@ export default function Routes() {
 
             <Tab.Screen
                 name="Histórico"
-                children={()=><Historic/>}
+                children={() => <Historic spending={spending} balances={balances} setBalances={setBalances} setSpending={setSpending} movements={movements} setMovements={setMovements} />}
                 options={{
                     title: '',
                     headerShown: false,
