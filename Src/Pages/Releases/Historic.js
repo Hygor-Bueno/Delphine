@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
     subContent: {
         justifyContent:'space-between',
         padding: 2,
-        height:80
+        height:75,
+        zIndex:1
     },
     subContentBtn:{
         justifyContent: 'flex-end',
