@@ -55,10 +55,8 @@ export default function ShoppingList(props) {
     function calcTotal() {
         let newTotal = 0;
         shoppList.list.forEach();
-        console.log(newTotal);
-
     }
-    useEffect(() => { console.log(shoppList) }, [shoppList]);
+    useEffect(() => { console.log(balance) }, [balance]);
 
     return (
         <View style={styles.container}>
@@ -122,7 +120,6 @@ export default function ShoppingList(props) {
                                 add.list.push(item);
                                 add.lastId = newID;
                                 setShoppList({ ...add });
-                                console.log(add, " <=====###=====>");
                                 clearForm();
                                 await updateShoppingList();
                             }
@@ -148,7 +145,7 @@ export default function ShoppingList(props) {
                             multiline={false}
                             keyboardType="numeric"
                             value={balance}
-                            onChangeText={async (text) =>setBalance(text)}
+                            onChangeText={async (text) =>{let newValue = balance; newValue = text; setBalance(newValue)}}
                         />
                     </View>
                     <Text style={styles.listTotal}>{balance !== '0'?'Saldo':'Total:'} {utilGlobal.maskMoney(total)}</Text>
@@ -168,7 +165,6 @@ export default function ShoppingList(props) {
     }
     function captureItems(value, key) {
         let newValue = item;
-        console.log(key, value);
         newValue[key] = value;
         setItem({ ...newValue });
     }
@@ -290,8 +286,12 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         height:20,
         marginLeft:8,
-        width:80,
+        width:100,
         borderRadius:8,
-        color: '#808080',
+        alignItems:'center',
+        justifyContent: 'center',
+        color: 'black',
+        padding:0,
+        paddingLeft:4
     }
 })
