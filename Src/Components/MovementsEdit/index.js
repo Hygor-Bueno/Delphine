@@ -9,28 +9,27 @@ export default function MovementsEdit({ data, movements, setMovements, listData,
             <Text style={styles.date}>{data.date}</Text>
             <View style={styles.content}>
                 <Text style={styles.label}>{data.description}</Text>
-                {
+                <View style={styles.subContent}>
                     <Text style={data.type === 1 ? styles.value : styles.expenses}>{data.type === 1 ? maskMoney(data.value) : `-${maskMoney(data.value)}`}</Text>
-                }
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={async () => {
+                            setLoad(true);
+                            let array = movements.releasesList || [];
+                            movements.releasesList = deleteItem(array);
+                            listData = deleteItem(listData);
+                            await AsyncStorage.setItem('user', JSON.stringify(movements));
+                            setMovements({ ...movements });
+                            setListData([...listData]);
+                            if (isDataView(data.date)) { reCalculate(data); };
+                            setLoad(false);
+                        }}
+                    >
 
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={async () => {
-                        setLoad(true);
-                        let array = movements.releasesList || [];
-                        movements.releasesList = deleteItem(array);
-                        listData = deleteItem(listData);
-                        await AsyncStorage.setItem('user', JSON.stringify(movements));
-                        setMovements({ ...movements });
-                        setListData([...listData]);
-                        if (isDataView(data.date)) { reCalculate(data); };
-                        setLoad(false);
-                    }}
+                        <FontAwesomeIcon size={22} color="#CACACA" icon="trash" />
+                    </TouchableOpacity>
+                </View>
 
-                >
-
-                    <FontAwesomeIcon size={22} color="#CACACA" icon="trash" />
-                </TouchableOpacity>
             </View>
         </View>
     );
@@ -79,6 +78,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: 2,
         marginBottom: 8
+    },
+    subContent:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width:'50%'
     },
     date: {
         color: "#CaCaCa",

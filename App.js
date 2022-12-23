@@ -24,9 +24,10 @@ import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons/faCalendarDays';
 import { faSackDollar } from '@fortawesome/free-solid-svg-icons/faSackDollar';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
+import { faListCheck } from '@fortawesome/free-solid-svg-icons/faListCheck';
 import { teste } from '@fortawesome/free-solid-svg-icons';
 
-library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus, faPlusCircle, faGenderless, faCalendar, faCalendarDays,faSackDollar,faTrash);
+library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus, faPlusCircle, faGenderless, faCalendar, faCalendarDays,faSackDollar,faTrash,faListCheck);
 
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './Src/Components/Routes';
@@ -34,6 +35,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default function App() {
   useEffect(() => {
+
     async function createDataBase() {
       try {
         let data = {
@@ -52,6 +54,19 @@ export default function App() {
         console.log(e);
       }
     }
+    async function createShoppingList() {
+      try {
+        let data = {
+          lastId:'0',
+          list: [],
+        };
+        await AsyncStorage.setItem('shoppingList', JSON.stringify(data));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+
     async function queryDataBase(key) {
       const value = await AsyncStorage.getItem(key);
       if (value === null) {
@@ -65,10 +80,19 @@ export default function App() {
         await createNextId();
       }
     };
+
+    async function queryShoppingList(key) {
+      const value = await AsyncStorage.getItem(key);
+      if (value === null) {
+        await createShoppingList();
+      }
+    };
     queryDataBase('user');
     queryNextId('lastID');
+    queryShoppingList('shoppingList');
     //  (()=>{AsyncStorage.removeItem('user');})();
     //  (()=>{AsyncStorage.removeItem('lastID');})();
+    //  (()=>{AsyncStorage.removeItem('shoppingList');})();
   }, []);
   return (
     <NavigationContainer>

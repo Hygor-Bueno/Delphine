@@ -34,12 +34,13 @@ export default function Historic(props) {
                     <View style={styles.SelectListView}>
                         <SelectList
                             boxStyles={{ backgroundColor: 'white' }}
-                            inputStyles={{ fontSize: 14 }}
-                            dropdownStyles={{ backgroundColor: 'white' }}
+                            inputStyles={{ fontSize: 14,color: '#555' }}
+                            dropdownStyles={{ backgroundColor: 'white'}}
+                            dropdownTextStyles={{ color: '#555' }}
                             placeholder="Selec. um mês"
-                            style={styles.textMonth}
                             data={month}
-                            setSelected={setMonthSelected} />
+                            setSelected={setMonthSelected}
+                            />
                     </View>
                 </View>
                 <View style={styles.subContent}>
@@ -117,25 +118,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     subContent: {
-        justifyContent:'space-between',
+        justifyContent: 'space-between',
         padding: 2,
-        height:75,
-        zIndex:1
+        height: 75,
+        zIndex: 1
     },
-    subContentBtn:{
+    subContentBtn: {
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
     titleText: {
         fontSize: 20,
         color: '#CACACA',
-    },
-    textMonth: {
-        borderColor: '#ccc',
-        borderWidth: 1,
-        fontSize: 25,
-        borderRadius: 12,
-        color: 'white',
     },
     SelectListView: {
         width: 150
@@ -145,10 +139,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         width: 100,
         height: 46,
-        fontSize: 25,
+        fontSize: 22,
         borderRadius: 12,
         color: '#808080',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     buttonInput: {
         alignItems: 'center',

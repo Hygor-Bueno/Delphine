@@ -50,13 +50,15 @@ const styles = StyleSheet.create({
     },
     subContainer: {
         width: '40%',
+        justifyContent: 'center',
+
     },
     itemTitle: {
         fontSize: 20,
         color: '#DADADA',
     },
     subTitle: {
-        fontSize: 16,
+        fontSize: 12,
         color: '#DADADA',
     },
     subView: {
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
         color: "#2ecc71"
     },
     subBalance: {
-        fontSize: 18,
+        fontSize: 16,
         color: "#2ecc71"
     },
     expenses: {
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
         color: '#e75c3c'
     },
     subExpenses: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#e75c3c'
     }
 })

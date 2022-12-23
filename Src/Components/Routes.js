@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../Pages/Home"
-import Historic from "../Pages/Releases/Historic";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import BtnReleases from "./Buttons/BtnReleases";
 import AsyncStorage from "@react-native-community/async-storage";
-import Releases from "../Pages/Historic/Releases";
+// Import of pages
+import Home from "../Pages/Home"
+import Historic from "../Pages/Historic/Historic";
+import Releases from "../Pages/Releases/Releases";
+import ShoppingList from "../Pages/ShoppingList/ShoppingList";
 
 const Tab = createBottomTabNavigator();
 export default function Routes() {
@@ -97,7 +99,8 @@ export default function Routes() {
                     headerShown: false,
                     headerTransparent: true,
                     tabBarIcon: ({ focused, size, color }) => (
-                        <BtnReleases size={size} focused={focused} color={color} />
+                        // <BtnReleases size={size} focused={focused} color={color} />
+                        <FontAwesomeIcon icon="sack-dollar" name="sack-dollar" size={size} color={color} />
                     )
                 }}
             />
@@ -111,6 +114,19 @@ export default function Routes() {
                     headerTransparent: true,
                     tabBarIcon: ({ size, color }) => (
                         <FontAwesomeIcon icon="search" name="search" size={size} color={color} />
+                    )
+                }}
+            />
+
+            <Tab.Screen
+                name="Lista de Compras"
+                children={() => <ShoppingList spending={spending} balances={balances} setBalances={setBalances} setSpending={setSpending} movements={movements} setMovements={setMovements} />}
+                options={{
+                    title: '',
+                    headerShown: false,
+                    headerTransparent: true,
+                    tabBarIcon: ({ size, color }) => (
+                        <FontAwesomeIcon icon="list-check" name="list-check" size={size} color={color} />
                     )
                 }}
             />
