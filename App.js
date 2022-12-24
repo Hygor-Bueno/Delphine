@@ -25,9 +25,11 @@ import { faCalendarDays } from '@fortawesome/free-solid-svg-icons/faCalendarDays
 import { faSackDollar } from '@fortawesome/free-solid-svg-icons/faSackDollar';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { faListCheck } from '@fortawesome/free-solid-svg-icons/faListCheck';
+import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
+import { faSave } from '@fortawesome/free-solid-svg-icons/faSave';
 import { teste } from '@fortawesome/free-solid-svg-icons';
 
-library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus, faPlusCircle, faGenderless, faCalendar, faCalendarDays,faSackDollar,faTrash,faListCheck);
+library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus, faPlusCircle, faGenderless, faCalendar, faCalendarDays,faSackDollar,faTrash,faListCheck,faPencil,faSave);
 
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './Src/Components/Routes';
@@ -58,6 +60,7 @@ export default function App() {
       try {
         let data = {
           lastId:'0',
+          balances:'',
           list: [],
         };
         await AsyncStorage.setItem('shoppingList', JSON.stringify(data));

@@ -1,12 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native';
 import Util from '../Utils/Util';
 
-export default function ShoppItem({ data, setLoad }) {
+export default function ShoppItem({ data, editItemList, deleteItemList }) {
     const utilGlobal = new Util();
-    console.log(data, "JIJIJIJIJI");
     return (
         <View style={styles.container}>
             <View style={styles.content}>
@@ -40,6 +39,24 @@ export default function ShoppItem({ data, setLoad }) {
                             <FontAwesomeIcon size={22} color="#CACACA" icon="trash" />
                         </TouchableOpacity>
                     </View> */}
+                    <View style={styles.buttonsItem}>
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={ () => {
+                                editItemList(data);
+                            }}
+                        >
+                            <FontAwesomeIcon size={12} color="#218838" icon="pencil" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={ () => {
+                                deleteItemList(data);
+                            }}
+                        >
+                            <FontAwesomeIcon size={12} color="#dc3545" icon="trash" />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </View>
@@ -48,9 +65,25 @@ export default function ShoppItem({ data, setLoad }) {
 }
 
 const styles = StyleSheet.create({
+    // teste: {
+    //     flex: 0,
+    //     position: 'absolute',
+    //     right: 8,
+    //     top: -10,
+    // },
+    // teste2: {
+    //     flex: 0,
+    //     position: 'absolute',
+    //     right: 20,
+    //     top: -10,
+    // },
+    buttonsItem: {
+        justifyContent: 'space-between'
+    },
     container: {
         flex: 1,
-        marginBottom: 16,
+        marginTop: 12,
+        marginBottom: 12,
         borderBottomWidth: 0.5,
         borderBottomColor: '#fff',
     },
@@ -62,12 +95,12 @@ const styles = StyleSheet.create({
     subContentLeft: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '40%'
+        width: '35%'
     },
     subContentRight: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '60%'
+        width: '65%'
     },
     itemsShoppQtd: {
         width: '20%'
@@ -86,7 +119,7 @@ const styles = StyleSheet.create({
     },
     subLabel: {
         color: '#DADADA',
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: 'bold'
     },
     value: {
@@ -95,7 +128,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     subValue: {
-        fontSize: 14,
+        fontSize: 12,
         color: '#DADADA',
     },
     expenses: {

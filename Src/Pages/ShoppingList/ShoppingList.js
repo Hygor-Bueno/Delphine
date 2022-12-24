@@ -6,6 +6,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import Loading from '../../Components/Loading/Loading';
 import ShoppItem from '../../Components/ShoppItem';
 import Util from '../../Components/Utils/Util';
+import { height } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
 
 export default function ShoppingList(props) {
     const utilGlobal = new Util();
@@ -28,12 +29,12 @@ export default function ShoppingList(props) {
         quantities: '',
         session: ''
     }
-    const [session, setSession] = useState('');
+    const [session, setSession] = useState('4');
     const [item, setItem] = useState(maskItem)
     const [load, setLoad] = useState(false);
     const [total, setTotal] = useState(0);
     const [shoppList, setShoppList] = useState({});
-    const [balance, setBalance] = useState('0');
+
 
     useEffect(() => {
         const getStorange = async (key) => {
@@ -43,7 +44,8 @@ export default function ShoppingList(props) {
                 if (value !== null) {
                     let convert = JSON.parse(value);
                     setShoppList(convert || {});
-                    setTotal(util.calcTotal(convert.list))
+                    let totalList = convert.balances !== '' ? value.balances - util.calcTotal(convert.list) : util.calcTotal(convert.list);
+                    setTotal(totalList);
                 }
             } catch (error) {
                 console.log(error);
@@ -52,11 +54,7 @@ export default function ShoppingList(props) {
         getStorange('shoppingList');
     }, []);
 
-    function calcTotal() {
-        let newTotal = 0;
-        shoppList.list.forEach();
-    }
-    useEffect(() => { console.log(balance) }, [balance]);
+    useEffect(() => { console.log(session) }, [session]);
 
     return (
         <View style={styles.container}>
@@ -71,21 +69,21 @@ export default function ShoppingList(props) {
                     />
                 </View>
                 <View style={styles.subContent}>
-                    <Text style={styles.titleText}>Valor:</Text>
-                    <TextInput style={styles.textValue}
-                        multiline={false}
-                        keyboardType="numeric"
-                        value={item.value}
-                        onChangeText={async (text) => captureItems(text, 'value')}
-                    />
-                </View>
-                <View style={styles.subContent}>
                     <Text style={styles.titleText}>Quantidade:</Text>
                     <TextInput style={styles.textValue}
                         multiline={false}
                         keyboardType="numeric"
                         value={item.quantities}
                         onChangeText={async (text) => captureItems(text, 'quantities')}
+                    />
+                </View>
+                <View style={styles.subContent}>
+                    <Text style={styles.titleText}>Valor:</Text>
+                    <TextInput style={styles.textValue}
+                        multiline={false}
+                        keyboardType="numeric"
+                        value={item.value}
+                        onChangeText={async (text) => captureItems(text, 'value')}
                     />
                 </View>
             </View>
@@ -115,18 +113,42 @@ export default function ShoppingList(props) {
                                 window.alert(response.message);
                             } else {
                                 let newID = parseInt(shoppList.lastId) + 1;
-                                let add = shoppList;
                                 captureItems(newID, 'id');
+                                let add = shoppList;
                                 add.list.push(item);
                                 add.lastId = newID;
                                 setShoppList({ ...add });
                                 clearForm();
                                 await updateShoppingList();
+                                setTotal(reloadTotal());
                             }
                             setLoad(false);
                         }}
                     >
                         <FontAwesomeIcon color='white' size={22} icon="plus" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{ ...styles.buttonInput, backgroundColor: '#FFA500' }}
+                        activeOpacity={0.5}
+                        onPress={async () => {
+                            setLoad(true);
+                            let response = validateItem();
+                            if (response.error) {
+                                window.alert(response.message);
+                            } else {
+                                let pos = locateItem(item.id);
+                                console.log(pos);
+                                let update = shoppList;
+                                update.list[pos] = item;
+                                setShoppList({ ...update });
+                                clearForm();
+                                await updateShoppingList();
+                                setTotal(reloadTotal());
+                            }
+                            setLoad(false);
+                        }}
+                    >
+                        <FontAwesomeIcon color='white' size={22} icon="save" />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -136,23 +158,51 @@ export default function ShoppingList(props) {
                     data={shoppList.list}
                     keyExtractor={(item) => String(item.id)}
                     showsVerticalScrollIndicator={false}
-                    renderItem={({ item }) => <ShoppItem data={item} setLoad={setLoad} />}
+                    renderItem={({ item }) => <ShoppItem data={item} deleteItemList={deleteItemList} editItemList={editItemList} />}
                 />
                 <View style={styles.listFooterContent}>
                     <View style={styles.viewInput}>
                         <Text style={styles.inputBalance}>Limite:</Text>
                         <TextInput style={styles.textInputBalance}
                             multiline={false}
+                            value={shoppList.balances}
                             keyboardType="numeric"
-                            value={balance}
-                            onChangeText={async (text) =>{let newValue = balance; newValue = text; setBalance(newValue)}}
+                            onChangeText={async (text) => { alterBalance(text); await updateShoppingList(); setTotal(reloadTotal()); console.log(parseFloat(shoppList.balances), utilGlobal.calcTotal(shoppList.list), shoppList.list) }}
                         />
                     </View>
-                    <Text style={styles.listTotal}>{balance !== '0'?'Saldo':'Total:'} {utilGlobal.maskMoney(total)}</Text>
+                    <Text style={styles.listTotal}>{shoppList.balances === '' ? 'Total:' : 'Saldo'} {utilGlobal.maskMoney(total)}</Text>
                 </View>
             </View>
         </View>
     );
+    function reloadTotal() {
+        let result = 0;
+        if (shoppList.balances === '') {
+            result = utilGlobal.calcTotal(shoppList.list);
+        } else {
+            result = (parseFloat(shoppList.balances) - utilGlobal.calcTotal(shoppList.list));
+        }
+        return result;
+    }
+    function locateItem(value) {
+        let position = null;
+        shoppList.list.forEach((element, index) => {
+            if (element.id === value) {
+                position = index;
+            }
+        });
+        return position;
+    }
+    async function deleteItemList(items) {
+        let newList = shoppList;
+        newList.list = shoppList.list.filter(produto => produto.id !== items.id);
+        setShoppList({ ...newList });
+        await updateShoppingList();
+        setTotal(reloadTotal());
+    }
+    function editItemList(items) {
+        setItem({ ...items });
+    }
     function validateItem() {
         let message = 'Atenção: \n';
         let result = { error: false };
@@ -175,6 +225,11 @@ export default function ShoppingList(props) {
     function clearForm() {
         setItem({ ...maskItem });
     }
+    function alterBalance(text) {
+        let newValue = shoppList;
+        newValue.balances = text;
+        setShoppList({ ...newValue })
+    }
     async function updateShoppingList() {
         try {
             await AsyncStorage.setItem('shoppingList', JSON.stringify(shoppList));
@@ -183,7 +238,6 @@ export default function ShoppingList(props) {
         }
     }
 }
-
 const styles = StyleSheet.create({
     container: {
         height: '100%',
@@ -197,7 +251,7 @@ const styles = StyleSheet.create({
     contentDatasSession: {
         padding: 4,
         flexDirection: 'row',
-
+        alignItems: 'flex-end',
     },
     subContent: {
         justifyContent: 'space-between',
@@ -206,8 +260,10 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     subContentBtn: {
-        justifyContent: 'flex-end',
+        flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
+        height: 45,
     },
     titleText: {
         fontSize: 20,
@@ -279,19 +335,19 @@ const styles = StyleSheet.create({
         height: '100%',
         alignItems: 'center',
     },
-    inputBalance:{
+    inputBalance: {
         color: '#FFFFFF',
     },
-    textInputBalance:{
-        backgroundColor:'white',
-        height:20,
-        marginLeft:8,
-        width:100,
-        borderRadius:8,
-        alignItems:'center',
+    textInputBalance: {
+        backgroundColor: 'white',
+        height: 20,
+        marginLeft: 8,
+        width: 100,
+        borderRadius: 8,
+        alignItems: 'center',
         justifyContent: 'center',
         color: 'black',
-        padding:0,
-        paddingLeft:4
+        padding: 0,
+        paddingLeft: 4
     }
 })
