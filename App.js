@@ -27,9 +27,10 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { faListCheck } from '@fortawesome/free-solid-svg-icons/faListCheck';
 import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
 import { faSave } from '@fortawesome/free-solid-svg-icons/faSave';
+import { faXmark } from '@fortawesome/free-solid-svg-icons/faXmark';
 import { teste } from '@fortawesome/free-solid-svg-icons';
 
-library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus, faPlusCircle, faGenderless, faCalendar, faCalendarDays,faSackDollar,faTrash,faListCheck,faPencil,faSave);
+library.add(fab, faSquareCheck, faMugSaucer, faHomeUser, faHome, faSearch, faPlus, faPlusCircle, faGenderless, faCalendar, faCalendarDays,faSackDollar,faTrash,faListCheck,faPencil,faSave,faXmark);
 
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './Src/Components/Routes';

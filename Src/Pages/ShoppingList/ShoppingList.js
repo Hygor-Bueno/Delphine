@@ -6,21 +6,21 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import Loading from '../../Components/Loading/Loading';
 import ShoppItem from '../../Components/ShoppItem';
 import Util from '../../Components/Utils/Util';
-import { height } from '@fortawesome/free-solid-svg-icons/faSquareCheck';
+import Select from '../../Components/Select/Select.js';
 
 export default function ShoppingList(props) {
     const utilGlobal = new Util();
     const listSession = [
-        { key: '1', value: 'Doce' },
-        { key: '2', value: 'Salgada' },
-        { key: '3', value: 'Padaria' },
-        { key: '4', value: 'Frio e laticíonios' },
-        { key: '5', value: 'Líquida' },
-        { key: '6', value: 'Higieno' },
-        { key: '7', value: 'Hortifruti' },
-        { key: '8', value: 'Bazar' },
-        { key: '9', value: 'Açougue' },
-        { key: '10', value: 'Outros' }
+        { value: '1', label: 'Doce' },
+        { value: '2', label: 'Salgada' },
+        { value: '3', label: 'Padaria' },
+        { value: '4', label: 'Frio e laticíonios' },
+        { value: '5', label: 'Líquida' },
+        { value: '6', label: 'Higieno' },
+        { value: '7', label: 'Hortifruti' },
+        { value: '8', label: 'Bazar' },
+        { value: '9', label: 'Açougue' },
+        { value: '10', label: 'Outros' }
     ];
     const maskItem = {
         id: '',
@@ -29,11 +29,16 @@ export default function ShoppingList(props) {
         quantities: '',
         session: ''
     }
-    const [session, setSession] = useState('4');
-    const [item, setItem] = useState(maskItem)
+    const maskList =  {
+        lastId: '0',
+        balances: '',
+        list: [],
+    }
+    const [session, setSession] = useState('');
+    const [item, setItem] = useState(maskItem);
     const [load, setLoad] = useState(false);
     const [total, setTotal] = useState(0);
-    const [shoppList, setShoppList] = useState({});
+    const [shoppList, setShoppList] = useState({...maskList});
 
 
     useEffect(() => {
@@ -44,7 +49,7 @@ export default function ShoppingList(props) {
                 if (value !== null) {
                     let convert = JSON.parse(value);
                     setShoppList(convert || {});
-                    let totalList = convert.balances !== '' ? value.balances - util.calcTotal(convert.list) : util.calcTotal(convert.list);
+                    let totalList = convert.balances !== '' ? convert.balances - util.calcTotal(convert.list) : util.calcTotal(convert.list);
                     setTotal(totalList);
                 }
             } catch (error) {
@@ -54,7 +59,7 @@ export default function ShoppingList(props) {
         getStorange('shoppingList');
     }, []);
 
-    useEffect(() => { console.log(session) }, [session]);
+    useEffect(() => {}, []);
 
     return (
         <View style={styles.container}>
@@ -91,15 +96,7 @@ export default function ShoppingList(props) {
                 <View style={styles.subContent}>
                     <Text style={styles.titleText}>Setor:</Text>
                     <View style={styles.SelectListView}>
-                        <SelectList
-                            data={listSession}
-                            setSelected={setSessionItem}
-                            boxStyles={{ backgroundColor: 'white' }}
-                            inputStyles={{ fontSize: 14, color: '#555', zIndex: 200 }}
-                            dropdownTextStyles={{ color: '#555' }}
-                            placeholder="Categorias"
-                            dropdownStyles={{ backgroundColor: 'white' }}
-                        />
+                        <Select value={item.session} setValue={setSessionItem} list={listSession} placeholder='Selecione' />
                     </View>
                 </View>
                 <View style={styles.subContentBtn}>
@@ -150,9 +147,33 @@ export default function ShoppingList(props) {
                     >
                         <FontAwesomeIcon color='white' size={22} icon="save" />
                     </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{ ...styles.buttonInput, backgroundColor: '#dc3545' }}
+                        activeOpacity={0.5}
+                        onPress={() => {
+                            setItem({ ...maskItem });
+                        }}
+                    >
+                        <FontAwesomeIcon color='white' size={22} icon="trash" />
+                    </TouchableOpacity>
                 </View>
             </View>
-            <View style={{ flex: 1, }}>
+            <View style={styles.constentList}>
+                <View style={{ alignItems: 'flex-end', marginRight: -6, marginTop: -10, marginBottom: 8 }}>
+                    <TouchableOpacity
+                        style={{ backgroundColor: '#dc3545', width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 15 }}
+                        activeOpacity={0.5}
+                        onPress={async () => {
+                            setLoad(true);
+                            setShoppList({...maskList});
+                            await AsyncStorage.setItem('shoppingList', JSON.stringify(maskList));
+                            setTotal(0);
+                            setLoad(false);
+                        }}
+                    >
+                        <FontAwesomeIcon color='#fff' size={18} icon="xmark" />
+                    </TouchableOpacity>
+                </View>
                 <FlatList
                     style={styles.list}
                     data={shoppList.list}
@@ -167,18 +188,20 @@ export default function ShoppingList(props) {
                             multiline={false}
                             value={shoppList.balances}
                             keyboardType="numeric"
-                            onChangeText={async (text) => { alterBalance(text); await updateShoppingList(); setTotal(reloadTotal()); console.log(parseFloat(shoppList.balances), utilGlobal.calcTotal(shoppList.list), shoppList.list) }}
+                            onChangeText={(text) => { alterBalance(text); setTotal(reloadTotal()); console.log(parseFloat(shoppList.balances), utilGlobal.calcTotal(shoppList.list), shoppList.list) }}
+                            onBlur={async () => { await updateShoppingList(); }}
                         />
                     </View>
                     <Text style={styles.listTotal}>{shoppList.balances === '' ? 'Total:' : 'Saldo'} {utilGlobal.maskMoney(total)}</Text>
                 </View>
             </View>
-        </View>
+        </View >
     );
     function reloadTotal() {
         let result = 0;
         if (shoppList.balances === '') {
             result = utilGlobal.calcTotal(shoppList.list);
+            console.log(shoppList);
         } else {
             result = (parseFloat(shoppList.balances) - utilGlobal.calcTotal(shoppList.list));
         }
@@ -206,7 +229,7 @@ export default function ShoppingList(props) {
     function validateItem() {
         let message = 'Atenção: \n';
         let result = { error: false };
-        if (item.description === '' || session === '') {
+        if (item.description === '' || item.session === '') {
             message += 'Os campos "Descrição" e "Setor" são obrigatórios.';
             result.error = true;
         }
@@ -219,7 +242,6 @@ export default function ShoppingList(props) {
         setItem({ ...newValue });
     }
     function setSessionItem(value) {
-        setSession(value);
         captureItems(value, 'session');
     }
     function clearForm() {
@@ -323,12 +345,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    list: {
+    constentList: {
+        borderRadius: 12,
+        flex: 1,
         backgroundColor: '#1B1E23',
-        margin: 12,
-        padding: 12,
+        margin: 8
+    },
+    list: {
+        padding: 6,
         height: '65%',
-        borderRadius: 12
     },
     viewInput: {
         flexDirection: 'row',
