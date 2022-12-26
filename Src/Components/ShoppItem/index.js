@@ -3,10 +3,23 @@ import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Util from '../Utils/Util';
 
-export default function ShoppItem({ data, editItemList, deleteItemList }) {
+export default function ShoppItem({ data, editItemList, deleteItemList, listSession }) {
     const utilGlobal = new Util();
+    function filterSession() {
+        let descLabel='';
+        listSession.forEach(item => {
+            if (item.value === data.session) {
+                console.log(item);
+                descLabel = item.label;
+            }
+        })
+        return descLabel;
+    }
     return (
         <View style={styles.container}>
+            <View>
+                <Text style={styles.label}>{filterSession()}:</Text>
+            </View>
             <View style={styles.content}>
                 <View style={styles.subContentLeft}>
                     <Text style={styles.label}>{data.description}</Text>
@@ -28,16 +41,16 @@ export default function ShoppItem({ data, editItemList, deleteItemList }) {
                     </View>
                     <View style={styles.buttonsItem}>
                         <TouchableOpacity
-                            style={{ backgroundColor: '#218838', height:22, width:22, alignItems:'center',justifyContent:'center',borderRadius:11 }}
+                            style={{ backgroundColor: '#218838', height: 22, width: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11 }}
                             activeOpacity={0.5}
                             onPress={() => {
                                 editItemList(data);
                             }}
-                            >
+                        >
                             <FontAwesomeIcon size={14} color="#fff" icon="pencil" />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={{ backgroundColor: '#dc3545', height:22, width:22, alignItems:'center',justifyContent:'center',borderRadius:11 }}
+                            style={{ backgroundColor: '#dc3545', height: 22, width: 22, alignItems: 'center', justifyContent: 'center', borderRadius: 11 }}
                             activeOpacity={0.5}
                             onPress={() => {
                                 deleteItemList(data);
@@ -67,7 +80,7 @@ const styles = StyleSheet.create({
     //     top: -10,
     // },
     buttonsItem: {
-        height:50,
+        height: 50,
         justifyContent: 'space-between'
     },
     container: {

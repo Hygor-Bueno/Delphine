@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Loading from '../../Components/Loading/Loading';
 import MovementsEdit from '../../Components/MovementsEdit';
@@ -69,9 +69,6 @@ export default function Historic(props) {
                         <FontAwesomeIcon color='white' size={22} icon="search" />
                     </TouchableOpacity>
                 </View>
-            </View>
-            <View style={styles.footer}>
-
             </View>
             <View style={styles.listData}>
                 <FlatList
@@ -148,11 +145,6 @@ const styles = StyleSheet.create({
     buttonIcon: {
         color: 'white',
         fontSize: 30,
-    },
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     list: {
         backgroundColor: '#1B1E23',

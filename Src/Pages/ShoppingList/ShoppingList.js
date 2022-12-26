@@ -33,7 +33,6 @@ export default function ShoppingList(props) {
         balances: '',
         list: [],
     }
-    const [session, setSession] = useState('');
     const [item, setItem] = useState(maskItem);
     const [load, setLoad] = useState(false);
     const [total, setTotal] = useState(0);
@@ -57,8 +56,6 @@ export default function ShoppingList(props) {
         };
         getStorange('shoppingList');
     }, []);
-
-    useEffect(() => {}, []);
 
     return (
         <View style={styles.container}>
@@ -175,10 +172,10 @@ export default function ShoppingList(props) {
                 </View>
                 <FlatList
                     style={styles.list}
-                    data={shoppList.list}
+                    data={utilGlobal.orderArray(shoppList.list)}
                     keyExtractor={(item) => String(item.id)}
                     showsVerticalScrollIndicator={false}
-                    renderItem={({ item }) => <ShoppItem data={item} deleteItemList={deleteItemList} editItemList={editItemList} />}
+                    renderItem={({ item }) => <ShoppItem listSession={listSession} data={item} deleteItemList={deleteItemList} editItemList={editItemList} />}
                 />
                 <View style={styles.listFooterContent}>
                     <View style={styles.viewInput}>
@@ -206,6 +203,7 @@ export default function ShoppingList(props) {
         }
         return result;
     }
+
     function locateItem(value) {
         let position = null;
         shoppList.list.forEach((element, index) => {
