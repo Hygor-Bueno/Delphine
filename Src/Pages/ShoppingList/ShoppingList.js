@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AsyncStorage from '@react-native-community/async-storage';
-import { SelectList } from 'react-native-dropdown-select-list';
 import Loading from '../../Components/Loading/Loading';
 import ShoppItem from '../../Components/ShoppItem';
 import Util from '../../Components/Utils/Util';

@@ -1,24 +1,24 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { SelectList } from "react-native-dropdown-select-list";
 import Loading from '../../Components/Loading/Loading';
 import MovementsEdit from '../../Components/MovementsEdit';
+import Select from '../../Components/Select/Select.js'
 
 export default function Historic(props) {
     const month = [
-        { key: '1', value: 'Janeiro' },
-        { key: '2', value: 'Fevereiro' },
-        { key: '3', value: 'Março' },
-        { key: '4', value: 'Abril' },
-        { key: '5', value: 'Maio' },
-        { key: '6', value: 'Junho' },
-        { key: '7', value: 'Julhl' },
-        { key: '8', value: 'Agosto' },
-        { key: '9', value: 'Setembro' },
-        { key: '10', value: 'Outubro' },
-        { key: '11', value: 'Novembro' },
-        { key: '12', value: 'Dezembro' }
+        { value: '1', label: 'Janeiro' },
+        { value: '2', label: 'Fevereiro' },
+        { value: '3', label: 'Março' },
+        { value: '4', label: 'Abril' },
+        { value: '5', label: 'Maio' },
+        { value: '6', label: 'Junho' },
+        { value: '7', label: 'Julhl' },
+        { value: '8', label: 'Agosto' },
+        { value: '9', label: 'Setembro' },
+        { value: '10', label: 'Outubro' },
+        { value: '11', label: 'Novembro' },
+        { value: '12', label: 'Dezembro' }
     ];
     const [monthSelected, setMonthSelected] = useState('');
     const [yar, setYar] = useState(0);
@@ -32,15 +32,7 @@ export default function Historic(props) {
                 <View style={styles.subContent}>
                     <Text style={styles.titleText}>Mês:</Text>
                     <View style={styles.SelectListView}>
-                        <SelectList
-                            boxStyles={{ backgroundColor: 'white' }}
-                            inputStyles={{ fontSize: 14,color: '#555' }}
-                            dropdownStyles={{ backgroundColor: 'white'}}
-                            dropdownTextStyles={{ color: '#555' }}
-                            placeholder="Selec. um mês"
-                            data={month}
-                            setSelected={setMonthSelected}
-                            />
+                        <Select value={monthSelected} setValue={setMonthSelected} list={month}/>
                     </View>
                 </View>
                 <View style={styles.subContent}>
