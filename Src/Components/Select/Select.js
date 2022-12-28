@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
-export default function Select(props){
+export default function Select(props) {
     const [isFocus, setIsFocus] = useState(false);
     return (
         <View style={styles.container}>
@@ -14,6 +14,7 @@ export default function Select(props){
                 iconStyle={styles.iconStyle}
                 data={props.list}
                 search
+                itemTextStyle={{ color: '#777' }}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
@@ -33,7 +34,8 @@ export default function Select(props){
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'transparent',
-        borderRadius:8
+        borderRadius: 8,
+
     },
     dropdown: {
         height: 46,
@@ -45,12 +47,12 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 5,
     },
-
     placeholderStyle: {
         fontSize: 16,
     },
     selectedTextStyle: {
         fontSize: 16,
+        color:'#777'
     },
     iconStyle: {
         width: 20,
